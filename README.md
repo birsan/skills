@@ -1,12 +1,19 @@
-Personal and Engineering skills
+# Personal and Engineering Skills
 
-Ways to install the skills locally:
+A collection of [Claude Code](https://claude.com/claude-code) skills for personal and engineering use.
 
-Use skills command:
-- npm install -g skills
-- skills init --global
-- skills add birsan/skills --global
+## Installation
 
+Install the [`skills`](https://www.npmjs.com/package/skills) CLI and add this repository globally:
 
-Useful skills:
-- skills add mattpocock/skills --global
+```bash
+npm install -g skills
+skills init --global
+skills add birsan/skills --global
+```
+
+## Other useful skill packs
+
+```bash
+skills add mattpocock/skills --global
+```
