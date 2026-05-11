@@ -207,39 +207,27 @@ git push
 
 Do not stage with `git add .` or `git add -A` — both can swallow tooling artifacts (`.orig`, build outputs, env files). Stage by explicit path.
 
-## Step 7 — Refresh the PR description
+## Step 7 — Refresh the PR description (end-of-loop only)
 
-After every push, pull the current PR body and decide whether it still describes the PR accurately. Body drift is the silent killer of code review: reviewers re-read the description on each round, and stale "this PR does X" framing wastes their time.
+Do **not** update the PR description mid-loop. Skip this step entirely unless
+both conditions are true:
 
-Fetch:
+1. The current review pass resulted in zero new unresolved threads (Copilot
+   has nothing left to flag), **and**
+2. The user confirms they're done iterating ("looks good", "merge it",
+   "re-request final review", or equivalent).
 
-```bash
-gh pr view <PR> --repo <OWNER>/<REPO> --json body --jq '.body'
-```
+Only then — once, at the end — ask the user:
 
-Compare against:
+> "No open threads remain. Does the PR description still accurately reflect
+> what this PR does? I can suggest an update if anything has drifted."
 
-- The list of commits since the original push: `git log --oneline <base>..HEAD`.
-- The full diff scope: `git diff --stat <base>..HEAD`.
-- Any new files, removed features, scope expansions, scope reductions, or behavioural changes that the description doesn't mention.
+Wait for a yes/no. If yes, show a proposed diff of the description changes
+and wait for explicit approval before calling `gh pr edit`. Do not write
+the new description autonomously.
 
-Update only if needed. Common triggers:
-
-- The PR's title-level promise has shifted (was about X, now also touches Y).
-- The "How to test" section references a path that no longer exists or a flow that changed.
-- A risk / out-of-scope note in the description is now stale (the risk was addressed, the deferred work is now included, etc.).
-- Screenshots in the description don't reflect the current UI.
-
-To update:
-
-```bash
-gh pr edit <PR> --repo <OWNER>/<REPO> --body "$(cat <<'EOF'
-<new body>
-EOF
-)"
-```
-
-If the body uses an org template (release notes, test plan, ticket links, PR checklist), preserve the template structure — fill the sections, don't replace them. If unsure whether an edit is needed, surface a one-line diff to the user and ask: low-friction, and avoids gratuitous body churn that just shows up in the review timeline.
+If the user says no or doesn't respond to this prompt, skip the edit entirely.
+One unanswered prompt = skip, not retry.
 
 ## Step 8 — Reply on each thread + resolve
 
