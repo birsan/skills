@@ -27,6 +27,34 @@ Do **not** invoke when:
 - The user has not authorized pushing to the branch (this skill pushes commits).
 - The PR is on a third-party fork without write access to the head ref.
 
+## Step 0 — Load repo conventions before touching any code
+
+Before reading any review thread, build a conventions snapshot. This reduces the review
+surface by making the initial code conform to what reviewers will check.
+
+```bash
+# Check for convention files in priority order
+for f in CLAUDE.md .github/copilot-instructions.md .editorconfig \
+          .eslintrc* .prettierrc* pyproject.toml ruff.toml; do
+  [ -f "$f" ] && echo "=== $f ===" && cat "$f"
+done
+```
+
+From this snapshot, extract:
+- **Naming rules** (camelCase, snake_case, file naming patterns)
+- **Import ordering** (stdlib → third-party → local, or configured otherwise)
+- **Error handling patterns** (exceptions vs. Result types, logging conventions)
+- **Test expectations** (co-located vs. separate, naming pattern, required for PRs?)
+- **Banned patterns** (any `// eslint-disable` comments or `# noqa` in existing code
+  indicate known problem areas — don't introduce similar patterns)
+
+Store this as your working `CONVENTIONS` reference. In Step 4 (fix/won't-fix), when a
+CONVENTION-class comment conflicts with this snapshot, the snapshot wins and the comment
+is won't-fix. When a BUG-class comment reveals a missing convention (e.g. "you should
+always null-check here"), add a mental note to apply that pattern proactively on other
+similar lines in the same PR — surface those as a batch fix rather than waiting for
+Copilot to flag each one individually.
+
 ## Step 1 — Identify the PR
 
 If the user named the PR (`#123`, a URL, or "this PR"), use that. Otherwise infer:
@@ -124,6 +152,25 @@ For each thread, in order:
    - Does the codebase have established conventions that the reviewer didn't know about? (e.g. "this project uses XYZ pattern, the suggestion conflicts" — won't-fix with explanation).
 3. **Apply the fix** using the right tool (Edit / Write / Bash for build/test) and respect repo conventions (resource lookups, `.editorconfig`, lint hooks, etc.).
 4. Track the thread → action mapping (in your head or a TaskCreate list) so the reply step has the right context.
+
+### 4a — Classify the comment before acting
+
+Assign one of three labels:
+
+- **BUG / CORRECTNESS** — logic error, null deref, security issue, broken contract.
+  → Always fix.
+- **CONVENTION** — naming, formatting, import order, pattern consistency.
+  → Fix only if the repo's own conventions (`.editorconfig`, linting config, `CLAUDE.md`) agree.
+  → If they don't agree, won't-fix with rationale referencing the repo rule.
+- **OPINION / STYLE** — subjective preference with no single correct answer, or a suggestion
+  that improves aesthetics but not correctness or maintainability.
+  → Won't-fix by default. Reply with one sentence acknowledging the idea and explaining
+  why the current form is intentional. Do not open a debate.
+
+Surface the classification in your internal tracking list:
+`[BUG] path:line — short summary` etc.
+Never apply an OPINION fix just because the reviewer is a bot and the fix is mechanical —
+bots optimize for their own training signal, not your codebase's coherence.
 
 ## Step 5 — Self-review the diff before pushing
 
