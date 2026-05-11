@@ -184,8 +184,10 @@ Run `git diff --stat` and `git diff` (or per-file `git diff <path>`) on every st
 - Repository convention drift (paired generated files, resource lookups consistent with code, etc.).
 - Tests that should accompany the change but are missing.
 - Tooling artifacts that shouldn't be committed (e.g. `*.orig` from merge conflict resolution, generated noise from a linter unrelated to your edits — discard those before staging).
+- Copilot instructions compliance: cross-check every changed line against the conventions loaded in Step 0 (especially `.github/copilot-instructions.md`). If the diff would trigger a Copilot comment based on those instructions, fix it now rather than waiting for the review pass.
 
 If the review surfaces issues, fix them in the **same** commit set rather than letting follow-up commits do "fix the fix". Only after this self-review passes, push.
+
 
 ## Step 6 — Commit and push
 
