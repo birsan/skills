@@ -44,7 +44,7 @@ if (-not $bellWav -and (Test-Path $ConfigPath)) {
         $cfg = Get-Content -Path $ConfigPath -Raw -Encoding utf8 | ConvertFrom-Json
         if ($cfg.bellPath) { $bellWav = $cfg.bellPath }
     } catch {
-        Write-Warning "Could not read $ConfigPath — falling back to default bell."
+        Write-Warning "Could not read $ConfigPath -- falling back to default bell."
     }
 }
 if (-not $bellWav) { $bellWav = Join-Path $env:SystemRoot 'Media\Alarm01.wav' }
@@ -56,7 +56,7 @@ if (Test-Path $bellWav) {
         Start-Sleep -Milliseconds 250
     }
 } else {
-    Write-Warning "Bell file not found: $bellWav — falling back to SystemSounds.Asterisk."
+    Write-Warning "Bell file not found: $bellWav -- falling back to SystemSounds.Asterisk."
     for ($i = 0; $i -lt 4; $i++) {
         [System.Media.SystemSounds]::Asterisk.Play()
         Start-Sleep -Milliseconds 600

@@ -3,10 +3,10 @@
     Summarize completed pomodoros from the JSONL log, grouped by label.
 
 .PARAMETER Range
-    today     — sessions started since midnight (default)
-    yesterday — sessions started during the previous calendar day
-    week      — sessions started since the most recent Monday 00:00
-    all       — every entry in the log
+    today     - sessions started since midnight (default)
+    yesterday - sessions started during the previous calendar day
+    week      - sessions started since the most recent Monday 00:00
+    all       - every entry in the log
 
 .PARAMETER LogPath
     Path to the JSONL log. Defaults to Documents\pomodoro-log.jsonl.
