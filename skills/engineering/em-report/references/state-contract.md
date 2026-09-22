@@ -38,7 +38,11 @@ Delivery facts only. No performance, compensation, health or personal circumstan
 | INI-005 | Reporting API v3 | Retire v1 endpoints | T. Nakamura | at-risk | 2026-11-02 | 2026-11-15 external | 9w | Low | Data PO | 2026-09-03 slipped from 10-19: blocked on DEP-012 |
 ```
 
-- `Status` — `not-started`, `on-track`, `at-risk`, `blocked`, `shipped`, `dropped`.
+- `Status` — `not-started`, `on-track`, `partial`, `at-risk`, `blocked`, `shipped`, `dropped`.
+  `partial` means live for some environments, regions or customers but not all — normal for
+  staged rollouts. It is only valid when `Notes` names **what is outstanding**; without that it
+  is `on-track` wearing a more confident label. Treat a row that has been `partial` for more
+  than two cycles as a finding: the remaining environment is the one that gets forgotten.
 - `Confidence` — **High**: would bet the date, work understood and staffed. **Medium**:
   plausible, one or two unknowns could move it. **Low**: don't plan downstream on it.
 - `Target` — a date or `TBD`, and it is *your plan*. `TBD` is honest; an invented date is not.
