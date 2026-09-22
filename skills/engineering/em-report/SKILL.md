@@ -36,8 +36,9 @@ Reports render `state/`; they are never written from scratch. "What changed" is 
 - **`report`** — Steps 0 to 5. Always captures first, so it is never built on knowingly stale
   state. Running it twice in a day is harmless.
 - **`capacity`** — Steps 0 and 1, then compute per `references/capacity.md` (read it first) and
-  `templates/capacity.md`. The model is never saved; offer its conclusion to `risks.md` as a
-  `decision` or an `ask`.
+  `templates/capacity.md`. No estimates, or stale ones, is the normal case: fall back to measured
+  throughput, then to displacement, and name which basis the answer rests on. The model is never
+  saved; offer its conclusion to `risks.md` as a `decision` or an `ask`.
 
 No state yet — no config, or empty tables? Render from the fictional examples in
 `references/state-contract.md`, labelled a sample of the format rather than a report.

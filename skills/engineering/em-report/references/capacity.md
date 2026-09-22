@@ -47,8 +47,49 @@ No `Remaining`? Ask. Can't estimate? Mark it **unsized**, exclude it, and say th
 incomplete. Never infer size from the target date or how big the goal sounds: a guessed
 denominator gives a confident wrong answer, which is worse than "cannot tell you yet".
 
+Estimates are engineer-weeks of effort, not calendar duration, and should come from the owner.
+Say whose estimate it is when it was the manager's.
+
+**Check how old each estimate is.** `Remaining` is the only field that decays without anything
+happening — every week of work makes it smaller, and a stale one looks identical to a fresh one.
+Get its age from `git log -1 --format=%cs -S'<initiative id>' -- state/initiatives.md`, or from
+the dated note that set it. Past one cycle on an in-progress initiative, report it as suspect and
+treat any shortfall as a **lower bound**: "INI-001's 6w estimate is 8 weeks old, so the real
+shortfall is at least this." Past two cycles, ask for a re-estimate before answering at all —
+arithmetic on a two-month-old denominator is not a capacity answer.
+
 An initiative's focus area is its owner's `Focus area`. One genuinely spanning two areas should
 be two rows; if it isn't, say which area you assigned and that the split is a guess.
+
+## When there are no estimates
+
+Missing or stale estimates are the normal case, not a dead end. Pick the strongest basis
+available and **name it in the answer**, so the user knows how much weight it carries.
+
+| Basis | Needs | Answers |
+|---|---|---|
+| Estimates | fresh `Remaining` | how much it misses by, in weeks |
+| Throughput | shipped history | how much the team can take on |
+| Displacement | `Owner` only | what stops if this starts |
+
+**Throughput.** Measure it, never guess it. From git history: when each initiative first
+appeared, and when its `Status` became `shipped`.
+
+```
+git log --diff-filter=M --format=%cs -S'shipped' -- state/initiatives.md
+```
+
+That gives initiatives shipped per person per cycle, and median elapsed weeks. Then: "you are
+proposing four; the last three cycles delivered two per person — which two?" It needs real
+history, so say so plainly when there is none yet, and treat the first few cycles as provisional.
+
+**Displacement.** Always available, and often the only answer the user needs. Count initiatives
+per owner from `initiatives.md`: a third one on someone who already has two means one of the two
+slows, and naming which is the decision. Never answer "yes" to new work without naming what
+moves.
+
+**Concurrency.** If the user has stated a limit (initiatives per person before work stalls), apply
+it as a hard constraint regardless of weeks. Never invent one.
 
 ## Weeks are not fungible
 
@@ -56,6 +97,16 @@ A checkout specialist's week is not a data-pipeline specialist's week. Report av
 focus area** as well as total, and **never net a surplus in one area against a deficit in
 another**. Totals comfortable but one area short → that goes in the headline. This is the most
 common way a capacity model lies to its owner.
+
+## Hard deadlines
+
+Where an initiative has a `Deadline`, the date is not a variable. Do not report it as "will be
+late" — report the **scope gap**: how many weeks short, and therefore what has to come out.
+"Two weeks short against 15 Nov, which cannot move — cut the MS form upgrade or add a second
+engineer for three weeks" is the answer; "it will slip to December" is not.
+
+Check `Target` against `Deadline` first. If `Target` is already later, the plan of record is
+broken and that is the finding, before any arithmetic.
 
 ## Slack
 

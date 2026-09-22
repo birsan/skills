@@ -28,6 +28,17 @@ changes since `{{period_start}}` ({{period_days}} days) · state at `{{commit}}`
 | at risk | {{initiative}} | {{old_confidence}} | {{new_confidence}} | {{reason}} |
 | resolved | {{risk_id}} | open | closed | {{resolution}} |
 
+## Hard deadlines
+
+Only rows with a `Deadline`, soonest first. Anything not `High` confidence here also belongs in
+`Needs me now`, whatever the attention horizon. Omit the section when there are none.
+
+| ID | Initiative | Deadline | Owned by | Target | Conf | Decide by | Days left |
+|---|---|---|---|---|---|---|---|
+| {{id}} | {{initiative}} | {{deadline}} | {{deadline_owner}} | {{target}} | {{confidence}} | {{decide_by}} | {{days_left}} |
+
+Flag any row where `Target` is later than `Deadline`: the plan of record is already broken.
+
 ## Initiatives
 
 | ID | Initiative | Status | Target | Conf | Owner | Last moved |

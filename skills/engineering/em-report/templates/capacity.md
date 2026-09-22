@@ -13,6 +13,8 @@ state at `{{commit}}`, captured {{last_capture}}
 
 **{{fits | does not fit | cannot tell}}** — {{one line: the shortfall and where it is}}
 
+basis: {{estimates | throughput | displacement}} — {{why that one, in a clause}}
+
 ## Available
 
 | Person | Focus area | Weeks available | Deductions applied |
@@ -25,9 +27,12 @@ state at `{{commit}}`, captured {{last_capture}}
 
 ## Demand
 
-| ID | Initiative | Remaining | Focus area | Target | Achievable |
-|---|---|---|---|---|---|
-| {{id}} | {{initiative}} | {{remaining}}w | {{focus}} | {{target}} | {{yes/no, by how much}} |
+| ID | Initiative | Remaining | Est. age | Focus area | Target | Achievable |
+|---|---|---|---|---|---|---|
+| {{id}} | {{initiative}} | {{remaining}}w | {{estimate_age}} | {{focus}} | {{target}} | {{yes/no, by how much}} |
+
+Flag any `Est. age` over one cycle: the shortfall becomes a lower bound. Over two cycles, ask
+for a re-estimate before answering.
 
 Unsized, excluded from the arithmetic:
 

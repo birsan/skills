@@ -54,8 +54,8 @@ function New-DeliveryScaffold {
 |---|---|---|---|---|---|---|---|---|---|
 '@
     Set-Content (Join-Path $Root 'state/initiatives.md') @'
-| ID | Initiative | Goal | Owner | Status | Target | Remaining | Confidence | Stakeholder | Notes |
-|---|---|---|---|---|---|---|---|---|---|
+| ID | Initiative | Goal | Owner | Status | Target | Deadline | Remaining | Confidence | Stakeholder | Notes |
+|---|---|---|---|---|---|---|---|---|---|---|
 '@
     Set-Content (Join-Path $Root 'state/dependencies.md') @'
 | ID | Direction | Counterparty | Item | Our owner | Their owner | Due | Status | Blocker |

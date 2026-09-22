@@ -21,9 +21,10 @@ Delivery facts only. No performance, compensation, health or personal circumstan
 
 - `Key` — stable join key for `people/<key>.md`. Set once, never changed, not even when a name
   changes. Matching on display name breaks silently.
-- `Git` — commit identity for attributing shipped work in `sources.repos`. Optional; a regex
-  alternation covers someone who commits under both a handle and a corporate email. Blank skips
-  attribution.
+- `Git` — commit identity for attributing shipped work in `sources.repos`. Optional; blank skips
+  attribution. Several identities (a handle and a corporate email) are **comma-separated**, and
+  the skill joins them into one `--author` pattern. Never put a `|` in a cell, escaped or not —
+  it renders fine but adds a column to every parser that splits on it.
 - `Alloc %` — share of time available to planned initiative work after standing commitments.
 - `Ramp` — `full`, `ramping to <YYYY-MM>`, or `leaving <YYYY-MM-DD>`.
 - `Away` — date ranges, never reasons.
@@ -31,18 +32,31 @@ Delivery facts only. No performance, compensation, health or personal circumstan
 ## `state/initiatives.md`
 
 ```markdown
-| ID | Initiative | Goal | Owner | Status | Target | Remaining | Confidence | Stakeholder | Notes |
-|---|---|---|---|---|---|---|---|---|---|
-| INI-004 | Checkout latency | p95 under 400ms | R. Alvarez | on-track | 2026-10-15 | 6w | Medium | Web Platform PO | Confidence Medium since 2026-09-01: two consumer teams unscheduled |
-| INI-005 | Reporting API v3 | Retire v1 endpoints | T. Nakamura | at-risk | 2026-11-02 | 9w | Low | Data PO | 2026-09-03 slipped from 10-19: blocked on DEP-012 |
+| ID | Initiative | Goal | Owner | Status | Target | Deadline | Remaining | Confidence | Stakeholder | Notes |
+|---|---|---|---|---|---|---|---|---|---|---|
+| INI-004 | Checkout latency | p95 under 400ms | R. Alvarez | on-track | 2026-10-15 | | 6w | Medium | Web Platform PO | Confidence Medium since 2026-09-01: two consumer teams unscheduled |
+| INI-005 | Reporting API v3 | Retire v1 endpoints | T. Nakamura | at-risk | 2026-11-02 | 2026-11-15 external | 9w | Low | Data PO | 2026-09-03 slipped from 10-19: blocked on DEP-012 |
 ```
 
 - `Status` — `not-started`, `on-track`, `at-risk`, `blocked`, `shipped`, `dropped`.
 - `Confidence` — **High**: would bet the date, work understood and staffed. **Medium**:
   plausible, one or two unknowns could move it. **Low**: don't plan downstream on it.
-- `Target` — a date or `TBD`. `TBD` is honest; an invented date is not.
-- `Remaining` — rough engineer-weeks left, read only by capacity mode. Blank means **unsized**:
-  excluded from the arithmetic, never guessed from the target date.
+- `Target` — a date or `TBD`, and it is *your plan*. `TBD` is honest; an invented date is not.
+- `Deadline` — a fixed date that is **not yours to move**, plus who owns it (`external`,
+  `release train`, `contractual`, `compliance`). Blank for most rows, and blank means there is
+  no wall, not that the target is soft.
+  - `Target` must be on or before `Deadline`. A row where it isn't is already broken — say so
+    rather than reporting it as on-track.
+  - Every `Deadline` needs a **decide-by** `ask` in `risks.md`: the last date you can still act
+    by cutting scope, adding people or negotiating, with the consequence of missing it. A
+    deadline discovered on the day is unmanageable.
+  - At-risk against a `Deadline` escalates **immediately** — it goes in `Needs me now` whatever
+    the attention horizon says, not into the weekly changed-list.
+- `Remaining` — rough engineer-weeks of effort left (not calendar duration), read only by
+  capacity mode. Blank means **unsized**: excluded from the arithmetic, never guessed from the
+  target date. It decays as work happens, so re-estimate it at capture when it moved materially
+  and date the change in `Notes` — capacity mode reports an estimate older than a cycle as
+  suspect.
 - Focus area comes from the owner's `Focus area`. An initiative spanning two areas should be two
   rows — per-area arithmetic cannot represent a straddling row honestly.
 - Any change to `Status`, `Target` or `Confidence` appends a **dated reason** to `Notes`. Highest
